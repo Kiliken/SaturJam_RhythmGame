@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,8 +9,8 @@ public class GameController : MonoBehaviour
 
     //can be modified
 
-    float noteSpeed = 400f;
-    float drumTime = .3f;
+    [NonSerialized] public float noteSpeed = 400f;
+    [NonSerialized] public float drumTime = .3f;
 
 
     //cannot be modified
