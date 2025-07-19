@@ -11,12 +11,18 @@ public class GameController : MonoBehaviour
 
     [NonSerialized] public float noteSpeed = 400f;
     [NonSerialized] public float drumTime = .3f;
+    [NonSerialized] public float spawnTime = 1f;
 
 
     //cannot be modified
     [SerializeField] Transform drum;
+    [SerializeField] GameObject notePrefab;
+    [SerializeField] Transform canvas;
+
+    [SerializeField] AudioClip[] noteType;
 
     float drumTimer = 0;
+    float spawnTimer = 0;
     private AudioSource sound;
     private Vector3 _mousePos;
 
@@ -29,8 +35,8 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       Inputs();
-       foreach (var note in GameObject.FindGameObjectsWithTag("Note"))
+        Inputs();
+        foreach (var note in GameObject.FindGameObjectsWithTag("Note"))
         {
             note.transform.localPosition += Vector3.down * Time.deltaTime * noteSpeed;
 
@@ -42,7 +48,19 @@ public class GameController : MonoBehaviour
         {
             drum.GetComponent<Image>().color = Color.green;
             drumTimer -= Time.deltaTime;
-        }else drum.GetComponent<Image>().color = Color.blue;
+        }
+        else drum.GetComponent<Image>().color = Color.blue;
+
+        if (spawnTimer <= 0)
+        {
+            GameObject note = Instantiate(notePrefab);
+            note.transform.parent = canvas;
+            note.transform.localPosition = new Vector3(UnityEngine.Random.Range(-810f,810f),700f,0f);
+            note.GetComponent<Note>().tuca = noteType[UnityEngine.Random.Range(0,2)];
+            spawnTimer = spawnTime + spawnTime * 0.1f * UnityEngine.Random.Range(-5, 5);
+            Debug.Log("Spawn");
+        }
+        else spawnTimer -= Time.deltaTime;
     }
 
     void Inputs()
